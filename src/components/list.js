@@ -50,7 +50,8 @@ class List extends React.Component {
     render() {
         return(
             <div className="list">
-                <p>To Do </p>
+                <p className='title'>To Do</p>
+                <div className="edit">X</div>
                 {
                     this.state.cardsArray.map((card) => {
                         return <Card data={card} />
