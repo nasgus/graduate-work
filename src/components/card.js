@@ -6,12 +6,10 @@ class Card extends React.Component {
     }
 
     render() {
-        const {data} = this.props;
+        const {data, openCard} = this.props;
         return(
-            <div className='card' key={data.id}>
-                <h3>
+            <div onClick={openCard} className='card' key={data.id} id={data.id}>
                     {data.title}
-                </h3>
             </div>
         )
     }

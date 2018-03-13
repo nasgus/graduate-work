@@ -7,31 +7,38 @@ class List extends React.Component {
         this.state = {
             cardsArray: [],
             isAddBlockOpened: false,
-            textArea: ''
+            title: '',
+            desc: ''
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
-        this.changeTextArea = this.changeTextArea.bind(this)
+        this.changeTitle = this.changeTitle.bind(this)
+        this.changeDesc = this.changeDesc.bind(this)
+        this.openCard = this.openCard.bind(this)
     }
 
     toggleAddCard() {
         this.setState({
-            textArea: '',
+            title: '',
+            desc: '',
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
+        console.log(this.state.cardsArray)
     }
 
     addToList() {
-        if(this.state.textArea !== ''){
+        if(this.state.title !== '' && this.state.desc !== ''){
             let card = {
                 id: this.state.cardsArray.length,
-                title: this.state.textArea
+                title: this.state.title,
+                desc: this.state.desc
             };
             let array = this.state.cardsArray;
             array.push(card)
             this.setState({
                 cardsArray: array,
-                title: this.state.textArea,
+                title: this.state.title,
+                desc: this.state.desc,
                 isAddBlockOpened: false
             })
         } else {
@@ -40,11 +47,21 @@ class List extends React.Component {
 
     }
 
-    changeTextArea(e) {
+    changeTitle(e) {
         console.log(e.target.value)
         this.setState({
-            textArea: e.target.value
+            title: e.target.value
         })
+    }
+
+    changeDesc(e) {
+        this.setState({
+            desc: e.target.value
+        })
+    }
+
+    openCard(e) {
+        console.log(e.target)
     }
 
     render() {
@@ -54,12 +71,13 @@ class List extends React.Component {
                 <div className="edit">X</div>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} />
+                        return <Card data={card} openCard={this.openCard} />
                     })
                 }
                 {this.state.isAddBlockOpened ?
                     <div className="add-card-opened">
-                        <textarea onChange={this.changeTextArea}></textarea>
+                        <textarea className='card-title' onChange={this.changeTitle}></textarea>
+                        <textarea className='card-desc' onChange={this.changeDesc}></textarea>
                         <button onClick={this.addToList}>Добавить</button>
                         <button onClick={this.toggleAddCard}>Х</button>
                     </div> :
