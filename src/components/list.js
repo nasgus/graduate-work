@@ -68,7 +68,7 @@ class List extends React.Component {
         return(
             <div className="list">
                 <p className='title'>To Do</p>
-                <div className="edit">X</div>
+                <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
                         return <Card data={card} openCard={this.openCard} />
@@ -78,10 +78,10 @@ class List extends React.Component {
                     <div className="add-card-opened">
                         <textarea className='card-title' onChange={this.changeTitle}></textarea>
                         <textarea className='card-desc' onChange={this.changeDesc}></textarea>
-                        <button onClick={this.addToList}>Добавить</button>
-                        <button onClick={this.toggleAddCard}>Х</button>
+                        <button className='add-card-btn grey' onClick={this.addToList}>Добавить</button>
+                        <button className='cancel-card grey' onClick={this.toggleAddCard}>Х</button>
                     </div> :
-                    <p className="add-card" onClick={this.toggleAddCard}> Добавить карточку... </p>
+                    <p className="add-card grey" onClick={this.toggleAddCard}> Добавить карточку... </p>
                 }
 
 
