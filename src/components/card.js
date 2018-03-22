@@ -1,9 +1,6 @@
 import React from 'react'
 
 class Card extends React.Component {
-    constructor() {
-        super()
-    }
 
     render() {
         const {data, openCard} = this.props;
