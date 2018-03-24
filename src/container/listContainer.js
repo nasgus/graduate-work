@@ -2,12 +2,52 @@ import React from 'react'
 import List from "../components/list";
 
 
-const ListContainer = () => {
-    return (
-        <div>
-            <List/>
-        </div>
-    )
+class ListContainer extends React.Component {
+    constructor() {
+        super();
+
+        const SpeechRecognition = window.SpeechRecognition
+            || window.webkitSpeechRecognition
+            || window.mozSpeechRecognition
+            || window.msSpeechRecognition
+            || window.oSpeechRecognition
+
+        this.recognition = new SpeechRecognition()
+
+        this.state = {
+            result: ''
+        };
+
+        this.startRec = this.startRec.bind(this)
+    }
+
+    startRec() {
+        this.recognition.start()
+
+    }
+
+    componentDidMount() {
+        this.recognition.onresult = function (event) {
+            console.log(event.results[0][0].transcript);
+            this.setState({
+                result: event.results[0][0].transcript
+            })
+        }.bind(this)
+
+
+    }
+
+
+    render() {
+        return (
+            <div>
+                <button className='start' onClick={this.startRec}>sd</button>
+                <div className='check-word'>{this.state.result}</div>
+                <List command={this.state.result}/>
+            </div>
+        )
+    }
+
 };
 
 export default ListContainer;

@@ -8,13 +8,15 @@ class List extends React.Component {
             cardsArray: [],
             isAddBlockOpened: false,
             title: '',
-            desc: ''
+            desc: '',
+            command: ''
+
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
         this.changeTitle = this.changeTitle.bind(this)
         this.changeDesc = this.changeDesc.bind(this)
-        this.openCard = this.openCard.bind(this)
+        this.checkCommand = this.checkCommand.bind(this)
     }
 
     toggleAddCard() {
@@ -23,7 +25,7 @@ class List extends React.Component {
             desc: '',
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
-        console.log(this.state.cardsArray)
+        console.log(this.props.command)
     }
 
     addToList() {
@@ -60,9 +62,37 @@ class List extends React.Component {
         })
     }
 
-    openCard(e) {
-        console.log(e.target)
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            command: nextProps.command > this.props.command
+
+    })
+        console.log(nextProps.command)
+        this.checkCommand(nextProps.command)
     }
+
+    checkCommand(command) {
+        let title = document.querySelector('.card-title')
+        let desc = document.querySelector('.card-desc')
+       if(command.indexOf('Создать заметку') === 0 ) {
+           this.toggleAddCard()
+       } if(command.indexOf('сохранить заметку') === 0 || command.indexOf('отменить создание заметки') === 0 ) {
+            this.addToList()
+        } if(this.state.isAddBlockOpened === true && command.indexOf('название') === 0) {
+           this.setState({
+               title: command.slice(9)
+           })
+            title.value = command.slice(9)
+        } if(this.state.isAddBlockOpened === true && command.indexOf('описание') === 0) {
+            this.setState({
+                desc: command.slice(9)
+            })
+            desc.value = command.slice(9)
+
+        }
+    }
+
+
 
     render() {
         return(
