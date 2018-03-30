@@ -74,7 +74,7 @@ class List extends React.Component {
     checkCommand(command) {
         let title = document.querySelector('.card-title')
         let desc = document.querySelector('.card-desc')
-       if(command.indexOf('Создать заметку') === 0 ) {
+       if(command.indexOf('создать заметку') === 0 ) {
            this.toggleAddCard()
        } if(command.indexOf('сохранить заметку') === 0 || command.indexOf('отменить создание заметки') === 0 ) {
             this.addToList()
@@ -89,6 +89,8 @@ class List extends React.Component {
             })
             desc.value = command.slice(9)
 
+        } if (command.indexOf('удалить заметку') === 0) {
+            this.state.cardsArray.some((item) => {console.log(item)})
         }
     }
 
