@@ -44,9 +44,7 @@ class ListContainer extends React.Component {
     render() {
         return (
             <div>
-                {/*{document.onkeydown = function (e) {*/}
-                    {/*this.recognition.start()*/}
-                {/*}}*/}
+
                 <button className='start' onClick={this.startRec}>sd</button>
                 <div className='check-word'>{this.state.result}</div>
                 <List command={this.state.result}/>

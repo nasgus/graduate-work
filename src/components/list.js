@@ -1,5 +1,7 @@
 import React from 'react'
 import Card from "./card";
+import axios from 'axios';
+
 
 class List extends React.Component {
     constructor() {
@@ -92,6 +94,22 @@ class List extends React.Component {
         } if (command.indexOf('удалить заметку') === 0) {
             this.state.cardsArray.some((item) => {console.log(item)})
         }
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:8000/lists')
+            .then((res) => {
+                console.log(res)
+                this.setState({
+                    cardsArray: res.data
+                })
+            })
+            .catch((err) => {
+                console.log('bad response ', err)
+            })
+        // this.setState({
+        //     arrayList: array
+        // })
     }
 
 
