@@ -1,6 +1,5 @@
 import React from 'react'
 import Card from "./card";
-import axios from 'axios';
 
 
 class List extends React.Component {
@@ -11,14 +10,15 @@ class List extends React.Component {
             isAddBlockOpened: false,
             title: '',
             desc: '',
-            command: ''
+            command: '',
+
 
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
         this.changeTitle = this.changeTitle.bind(this)
         this.changeDesc = this.changeDesc.bind(this)
-        this.checkCommand = this.checkCommand.bind(this)
+        this.checkArrCommand = this.checkArrCommand.bind(this)
     }
 
     toggleAddCard() {
@@ -27,15 +27,17 @@ class List extends React.Component {
             desc: '',
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
-        console.log(this.props.command)
     }
 
+
     addToList() {
-        if(this.state.title !== '' && this.state.desc !== ''){
+        if (this.state.title !== '' && this.state.desc !== '') {
+
             let card = {
                 id: this.state.cardsArray.length,
                 title: this.state.title,
-                desc: this.state.desc
+                desc: this.state.desc,
+                date: new Date()
             };
             let array = this.state.cardsArray;
             array.push(card)
@@ -48,6 +50,8 @@ class List extends React.Component {
         } else {
             alert('error')
         }
+
+        console.log(this.state.cardsArray)
 
     }
 
@@ -68,72 +72,101 @@ class List extends React.Component {
         this.setState({
             command: nextProps.command > this.props.command
 
-    })
+        })
         console.log(nextProps.command)
-        this.checkCommand(nextProps.command)
+        this.checkArrCommand(nextProps.command)
     }
 
-    checkCommand(command) {
-        let title = document.querySelector('.card-title')
-        let desc = document.querySelector('.card-desc')
-       if(command.indexOf('создать заметку') === 0 ) {
-           this.toggleAddCard()
-       } if(command.indexOf('сохранить заметку') === 0 || command.indexOf('отменить создание заметки') === 0 ) {
-            this.addToList()
-        } if(this.state.isAddBlockOpened === true && command.indexOf('название') === 0) {
-           this.setState({
-               title: command.slice(9)
-           })
-            title.value = command.slice(9)
-        } if(this.state.isAddBlockOpened === true && command.indexOf('описание') === 0) {
-            this.setState({
-                desc: command.slice(9)
-            })
-            desc.value = command.slice(9)
+    checkArrCommand(command) {
+        const addCommand = [
+            'создать заметку',
 
-        } if (command.indexOf('удалить заметку') === 0) {
-            this.state.cardsArray.some((item) => {console.log(item)})
-        }
-    }
+            'создать новую заметку',
+            'новая заметка',
+            'сделай новую заметку',
+            'напиши новую заметку',
+            'добавить заметку',
+            'добавить новую заметку'
+        ];
+        const saveCommand = [
+            'сохранить заметку',
+            'запомнить заметку',
+            'сохрани заметку',
+            'сберечь заметку',
+        ];
+        const cancelCommand = [
+            'омтенить создание заметки',
+            'запретить создание заметку',
+            'забыть создание заметку',
+            'не сохронять заметку',
+        ];
+        const nameCommand = [
+            'название заметки',
+            'имя заметки',
+            'титул заметки',
+            'наименование заметки',
+            'назвать заметку',
 
-    componentDidMount() {
-        axios.get('http://localhost:8000/lists')
-            .then((res) => {
-                console.log(res)
+        ];
+        const descCommand = [
+            'описание заметки',
+            'задание заметки',
+        ]
+
+
+        addCommand.forEach((item) => {
+            if (command.indexOf(item) === 0) {
+                this.toggleAddCard()
+            }
+        });
+        saveCommand.forEach((item) => {
+            if (command.indexOf(item) === 0) {
+                this.addToList()
+            }
+        });
+        cancelCommand.forEach((item) => {
+            if (command.indexOf(item) === 0) {
+                this.toggleAddCard()
+            }
+        });
+        nameCommand.forEach((item) => {
+            if (command.indexOf(item) === 0) {
                 this.setState({
-                    cardsArray: res.data
+                    title: command.slice(item.length)
                 })
-            })
-            .catch((err) => {
-                console.log('bad response ', err)
-            })
-        // this.setState({
-        //     arrayList: array
-        // })
-    }
+            }
+        });
+        descCommand.forEach((item) => {
+            if (command.indexOf(item) === 0) {
+                this.setState({
+                    desc: command.slice(item.length)
+                })
+            }
+        });
 
+
+    }
 
 
     render() {
-        return(
+        return (
             <div className="list">
                 <p className='title'>To Do</p>
                 <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} openCard={this.openCard} />
+                        return <Card data={card} openCard={this.openCard}/>
                     })
                 }
                 {this.state.isAddBlockOpened ?
                     <div className="add-card-opened">
-                        <textarea className='card-title' onChange={this.changeTitle}></textarea>
-                        <textarea className='card-desc' onChange={this.changeDesc}></textarea>
+                        <textarea className='card-title' onChange={this.changeTitle} value={this.state.title}></textarea>
+                        <textarea className='card-desc' onChange={this.changeDesc} value={this.state.desc}></textarea>
                         <button className='add-card-btn grey' onClick={this.addToList}>Добавить</button>
                         <button className='cancel-card grey' onClick={this.toggleAddCard}>Х</button>
                     </div> :
                     <p className="add-card grey" onClick={this.toggleAddCard}> Добавить карточку... </p>
                 }
-
 
 
             </div>
