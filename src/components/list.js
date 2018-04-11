@@ -1,8 +1,9 @@
 import React from 'react'
 import Card from "./card";
 
+let b = 0
 
-class List extends React.Component {
+class CardList extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -11,8 +12,6 @@ class List extends React.Component {
             title: '',
             desc: '',
             command: '',
-
-
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
@@ -28,7 +27,6 @@ class List extends React.Component {
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
     }
-
 
     addToList() {
         if (this.state.title !== '' && this.state.desc !== '') {
@@ -155,7 +153,7 @@ class List extends React.Component {
                 <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} openCard={this.openCard}/>
+                        return <Card data={card} key={this.state.cardsArray.length} desc={this.state.desc}/>
                     })
                 }
                 {this.state.isAddBlockOpened ?
@@ -175,4 +173,4 @@ class List extends React.Component {
 }
 
 
-export default List;
+export default CardList;

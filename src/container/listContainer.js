@@ -1,5 +1,7 @@
 import React from 'react'
-import List from "../components/list";
+import CardList from "../components/list";
+
+
 
 
 class ListContainer extends React.Component {
@@ -47,7 +49,7 @@ class ListContainer extends React.Component {
 
                 <button className='start' onClick={this.startRec}>sd</button>
                 <div className='check-word'>{this.state.result}</div>
-                <List command={this.state.result}/>
+                <CardList command={this.state.result}/>
             </div>
         )
     }
