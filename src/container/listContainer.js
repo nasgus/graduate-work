@@ -24,7 +24,8 @@ class ListContainer extends React.Component {
     }
 
     startRec(e) {
-        if (e.code === 'Space' && e.repeat === false) {
+        if (e.code === 'ShiftRight' && e.repeat === false) {
+
             this.recognition.start()
         }
     }
@@ -46,7 +47,6 @@ class ListContainer extends React.Component {
     render() {
         return (
             <div>
-
                 <button className='start' onClick={this.startRec}>sd</button>
                 <div className='check-word'>{this.state.result}</div>
                 <CardList command={this.state.result}/>

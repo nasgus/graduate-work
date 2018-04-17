@@ -17,19 +17,33 @@ class Card extends React.Component {
         super(props)
         this.state = {
             open: false,
-            desc: props.desc
-        }
+            desc: props.desc,
+            speechSyn: new SpeechSynthesisUtterance,
+    }
         }
 
     handleClickOpen = () => {
+        console.log(this.state.speechSyn)
         this.setState({ open: !this.state.open });
+        this.startSPeak()
     };
+
+    startSPeak = () => {
+        let speech = new SpeechSynthesisUtterance();
+        speech.text = 'название заметки - ' + this.props.data.title + '. описание заметки - ' + this.props.data.desc;
+        if(this.state.open === false) {
+            speechSynthesis.speak(speech);
+
+        }
+        console.log(this.props)
+
+    }
 
     render() {
         const {data} = this.props;
         return(
             <div onClick={this.handleClickOpen} className='card' id={data.id}>
-                    {data.title}
+                {data.title}
                 <Dialog
                     open={this.state.open}
                     transition={Transition}

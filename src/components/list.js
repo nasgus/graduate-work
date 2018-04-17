@@ -26,6 +26,8 @@ class CardList extends React.Component {
             desc: '',
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
+
+        console.log(this.state.speechSyn)
     }
 
     addToList() {
@@ -43,6 +45,7 @@ class CardList extends React.Component {
                 cardsArray: array,
                 title: this.state.title,
                 desc: this.state.desc,
+                date: new Date(),
                 isAddBlockOpened: false
             })
         } else {
@@ -78,7 +81,6 @@ class CardList extends React.Component {
     checkArrCommand(command) {
         const addCommand = [
             'создать заметку',
-
             'создать новую заметку',
             'новая заметка',
             'сделай новую заметку',
@@ -153,7 +155,7 @@ class CardList extends React.Component {
                 <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} key={this.state.cardsArray.length} desc={this.state.desc}/>
+                        return <Card data={card} key={b++} desc={this.state.desc}/>
                     })
                 }
                 {this.state.isAddBlockOpened ?
