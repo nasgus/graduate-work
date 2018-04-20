@@ -4,14 +4,14 @@ import Card from "./card";
 let b = 0
 
 class CardList extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             cardsArray: [],
             isAddBlockOpened: false,
             title: '',
             desc: '',
-            command: '',
+            command: props.command,
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
@@ -27,7 +27,6 @@ class CardList extends React.Component {
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
 
-        console.log(this.state.speechSyn)
     }
 
     addToList() {
@@ -37,7 +36,7 @@ class CardList extends React.Component {
                 id: this.state.cardsArray.length,
                 title: this.state.title,
                 desc: this.state.desc,
-                date: new Date()
+                command: this.state.command,
             };
             let array = this.state.cardsArray;
             array.push(card)
@@ -52,12 +51,10 @@ class CardList extends React.Component {
             alert('error')
         }
 
-        console.log(this.state.cardsArray)
 
     }
 
     changeTitle(e) {
-        console.log(e.target.value)
         this.setState({
             title: e.target.value
         })
@@ -74,7 +71,6 @@ class CardList extends React.Component {
             command: nextProps.command > this.props.command
 
         })
-        console.log(nextProps.command)
         this.checkArrCommand(nextProps.command)
     }
 
@@ -155,7 +151,7 @@ class CardList extends React.Component {
                 <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} key={b++} desc={this.state.desc}/>
+                        return <Card data={card} key={b++} command={this.props.command} />
                     })
                 }
                 {this.state.isAddBlockOpened ?

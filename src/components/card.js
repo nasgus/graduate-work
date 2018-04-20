@@ -18,12 +18,12 @@ class Card extends React.Component {
         this.state = {
             open: false,
             desc: props.desc,
+            title: props.data.title,
             speechSyn: new SpeechSynthesisUtterance,
     }
         }
 
     handleClickOpen = () => {
-        console.log(this.state.speechSyn)
         this.setState({ open: !this.state.open });
         this.startSPeak()
     };
@@ -35,9 +35,21 @@ class Card extends React.Component {
             speechSynthesis.speak(speech);
 
         }
-        console.log(this.props)
-
     }
+
+    componentWillMount() {
+        this.openCard()
+        console.log('tttt')
+    }
+
+    openCard() {
+        let com = 'открыть заметку'
+        let prop = this.props.command.slice(16)
+        if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
+            this.setState({ open: !this.state.open });
+        }
+    }
+
 
     render() {
         const {data} = this.props;

@@ -34,7 +34,7 @@ class ListContainer extends React.Component {
         document.onkeydown = this.startRec
 
         this.recognition.onresult = function (event) {
-            console.log(event.results[0][0].transcript);
+            console.log(this.state.result)
             this.setState({
                 result: event.results[0][0].transcript.toLowerCase()
             })
@@ -47,7 +47,6 @@ class ListContainer extends React.Component {
     render() {
         return (
             <div>
-                <button className='start' onClick={this.startRec}>sd</button>
                 <div className='check-word'>{this.state.result}</div>
                 <CardList command={this.state.result}/>
             </div>
