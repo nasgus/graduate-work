@@ -128,14 +128,14 @@ class CardList extends React.Component {
         nameCommand.forEach((item) => {
             if (command.indexOf(item) === 0) {
                 this.setState({
-                    title: command.slice(item.length)
+                    title: command.slice(item.length + 1)
                 })
             }
         });
         descCommand.forEach((item) => {
             if (command.indexOf(item) === 0) {
                 this.setState({
-                    desc: command.slice(item.length)
+                    desc: command.slice(item.length + 1)
                 })
             }
         });

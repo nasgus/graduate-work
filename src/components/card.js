@@ -16,6 +16,7 @@ class Card extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            delete: true,
             open: false,
             desc: props.desc,
             title: props.data.title,
@@ -39,7 +40,7 @@ class Card extends React.Component {
 
     componentWillMount() {
         this.openCard()
-        console.log('tttt')
+        this.deleteCard()
     }
 
     openCard() {
@@ -50,9 +51,23 @@ class Card extends React.Component {
         }
     }
 
+    deleteCard() {
+
+        let com = 'удалить заметку';
+        let prop = this.props.command.slice(16);
+        if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
+            this.setState({ delete: !this.state.delete})
+        }
+
+    }
+
 
     render() {
         const {data} = this.props;
+
+        if(!this.state.delete) {
+            return(null)
+        }
         return(
             <div onClick={this.handleClickOpen} className='card' id={data.id}>
                 {data.title}
