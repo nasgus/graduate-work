@@ -52,12 +52,12 @@ class Card extends React.Component {
     }
 
     deleteCard() {
-
-        let com = 'удалить заметку';
-        let prop = this.props.command.slice(16);
-        if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
-            this.setState({ delete: !this.state.delete})
-        }
+        //
+        // let com = 'удалить заметку';
+        // let prop = this.props.command.slice(16);
+        // if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
+        //     this.setState({ delete: !this.state.delete})
+        // }
 
     }
 

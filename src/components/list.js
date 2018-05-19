@@ -18,6 +18,7 @@ class CardList extends React.Component {
         this.changeTitle = this.changeTitle.bind(this)
         this.changeDesc = this.changeDesc.bind(this)
         this.checkArrCommand = this.checkArrCommand.bind(this)
+        this.deleteCard = this.deleteCard.bind(this)
     }
 
     toggleAddCard() {
@@ -27,11 +28,11 @@ class CardList extends React.Component {
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
 
+
     }
 
     addToList() {
         if (this.state.title !== '' && this.state.desc !== '') {
-
             let card = {
                 id: this.state.cardsArray.length,
                 title: this.state.title,
@@ -47,6 +48,7 @@ class CardList extends React.Component {
                 date: new Date(),
                 isAddBlockOpened: false
             })
+            console.log(this.state.cardsArray)
         } else {
             alert('error')
         }
@@ -66,13 +68,16 @@ class CardList extends React.Component {
         })
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, lol) {
         this.setState({
             command: nextProps.command > this.props.command
 
         })
         this.checkArrCommand(nextProps.command)
+        this.deleteCard(nextProps.command)
     }
+
+
 
     checkArrCommand(command) {
         const addCommand = [
@@ -143,6 +148,24 @@ class CardList extends React.Component {
 
     }
 
+    deleteCard(kek) {
+        console.log('open')
+        let arr = [];
+        let com = 'удалить заметку';
+            this.state.cardsArray.map((card) => {
+                if(kek.indexOf(com) === 0 && kek.slice(16) === card.title) {
+                    console.log(card.title, card.id)
+                    // this.state.cardsArray.splice(card.id, card.id)
+                } else {
+                    arr.push(card)
+                }
+            })
+            this.setState({
+                cardsArray: arr
+            })
+
+
+    }
 
     render() {
         return (
