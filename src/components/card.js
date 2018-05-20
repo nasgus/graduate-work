@@ -40,7 +40,6 @@ class Card extends React.Component {
 
     componentWillMount() {
         this.openCard()
-        this.deleteCard()
     }
 
     openCard() {
@@ -48,18 +47,10 @@ class Card extends React.Component {
         let prop = this.props.command.slice(16)
         if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
             this.setState({ open: !this.state.open });
+            this.startSPeak()
         }
     }
 
-    deleteCard() {
-        //
-        // let com = 'удалить заметку';
-        // let prop = this.props.command.slice(16);
-        // if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
-        //     this.setState({ delete: !this.state.delete})
-        // }
-
-    }
 
 
     render() {

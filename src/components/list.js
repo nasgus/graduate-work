@@ -52,8 +52,6 @@ class CardList extends React.Component {
         } else {
             alert('error')
         }
-
-
     }
 
     changeTitle(e) {
