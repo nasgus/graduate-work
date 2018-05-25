@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from "./card";
 
-let b = 0
+let b = 0;
 
 class CardList extends React.Component {
     constructor(props) {
@@ -27,8 +27,6 @@ class CardList extends React.Component {
             desc: '',
             isAddBlockOpened: !this.state.isAddBlockOpened
         })
-
-
     }
 
     addToList() {
@@ -70,12 +68,10 @@ class CardList extends React.Component {
         this.setState({
             command: nextProps.command > this.props.command
 
-        })
+        });
         this.checkArrCommand(nextProps.command)
         this.deleteCard(nextProps.command)
     }
-
-
 
     checkArrCommand(command) {
         const addCommand = [
@@ -110,8 +106,7 @@ class CardList extends React.Component {
         const descCommand = [
             'описание заметки',
             'задание заметки',
-        ]
-
+        ];
 
         addCommand.forEach((item) => {
             if (command.indexOf(item) === 0) {
@@ -142,8 +137,6 @@ class CardList extends React.Component {
                 })
             }
         });
-
-
     }
 
     deleteCard(kek) {
@@ -153,7 +146,6 @@ class CardList extends React.Component {
             this.state.cardsArray.map((card) => {
                 if(kek.indexOf(com) === 0 && kek.slice(16) === card.title) {
                     console.log(card.title, card.id)
-                    // this.state.cardsArray.splice(card.id, card.id)
                 } else {
                     arr.push(card)
                 }

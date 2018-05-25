@@ -1,5 +1,6 @@
 import React from 'react'
 import CardList from "../components/list";
+import BookList from "../components/BookList"
 
 const SpeechRecognition = window.SpeechRecognition
     || window.webkitSpeechRecognition
@@ -10,46 +11,37 @@ const SpeechRecognition = window.SpeechRecognition
 let recognition = new SpeechRecognition();
 recognition.interimResults = false;
 let recognizing = true;
+
 recognition.onstart = function () {
     recognizing = false;
 };
 recognition.onend = function () {
     recognizing = true;
+    startRec()
 };
-recognition.onerror = function (event) {
+recognition.onerror = function () {
     recognizing = true;
 };
 
-
-
+function startRec(e) {
+    if (recognizing) {
+        recognition.stop();
+        recognition.start();
+        }
+}
 
 
 class ListContainer extends React.Component {
     constructor() {
         super();
-
-
         this.state = {
             result: ''
         };
 
-        this.startRec = this.startRec.bind(this)
-    }
-
-    startRec(e) {
-        if (recognizing) {
-            console.log(recognizing)
-            if (e.code === 'ControlLeft' && e.repeat === false) {
-                recognition.stop();
-                recognition.start()
-            }
-        }
-
     }
 
     componentDidMount() {
-        document.onkeydown = this.startRec
-
+        window.onload = startRec()
         recognition.onresult = function (event) {
             this.setState({
                 result: event.results[0][0].transcript.toLowerCase()
@@ -59,11 +51,11 @@ class ListContainer extends React.Component {
 
     }
 
-
     render() {
         return (
             <div>
                 <div className='check-word'>{this.state.result}</div>
+                <BookList/>
                 <CardList command={this.state.result}/>
             </div>
         )

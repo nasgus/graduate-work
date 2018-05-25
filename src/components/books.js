@@ -1,3 +1,4 @@
+import axios from "axios/index";
 import React from 'react'
 import Button from 'material-ui/Button';
 import Dialog, {
@@ -12,17 +13,15 @@ function Transition(props) {
     return <Slide direction="up" {...props} />;
 }
 
-class Card extends React.Component {
-    constructor(props) {
-        super(props)
+
+
+class Books extends React.Component {
+    constructor() {
+        super()
         this.state = {
-            delete: true,
-            open: false,
-            desc: props.desc,
-            title: props.data.title,
-            speechSyn: new SpeechSynthesisUtterance,
-    }
+            open: false
         }
+    }
     handleClickOpen = () => {
         if(this.state.open === false) {
             speechSynthesis.cancel()
@@ -33,7 +32,7 @@ class Card extends React.Component {
     };
     startSPeak = () => {
         let speech = new SpeechSynthesisUtterance();
-        speech.text = 'название заметки - ' + this.props.data.title + '. описание заметки - ' + this.props.data.desc;
+        speech.text = 'название книги - ' + this.props.data.title;
         if(this.state.open === false) {
             speechSynthesis.speak(speech);
 
@@ -41,12 +40,10 @@ class Card extends React.Component {
             speechSynthesis.cancel()
         }
     };
-    componentWillMount() {
-        this.openCard()
-    }
-    openCard() {
-        let com = 'открыть заметку'
-        let prop = this.props.command.slice(16)
+
+    openCard = () => {
+        let com = 'открыть книгу'
+        let prop = this.props.command.slice(15)
         if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
             this.setState({ open: !this.state.open });
             this.startSPeak()
@@ -54,7 +51,7 @@ class Card extends React.Component {
     }
     render() {
         const {data} = this.props;
-
+        console.log(data, 'kek')
         return(
             <div onClick={this.handleClickOpen} className='card' id={data.id}>
                 {data.title}
@@ -85,4 +82,4 @@ class Card extends React.Component {
     }
 }
 
-export default Card;
+export default Books
