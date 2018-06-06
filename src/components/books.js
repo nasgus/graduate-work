@@ -32,7 +32,7 @@ class Books extends React.Component {
     };
     startSPeak = () => {
         let speech = new SpeechSynthesisUtterance();
-        speech.text = 'название книги - ' + this.props.data.title;
+        speech.text = this.props.data.title + '.' + this.props.data.desc;
         if(this.state.open === false) {
             speechSynthesis.speak(speech);
 
@@ -41,20 +41,37 @@ class Books extends React.Component {
         }
     };
 
-    openCard = () => {
-        let com = 'открыть книгу'
-        let prop = this.props.command.slice(15)
-        if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
-            this.setState({ open: !this.state.open });
-            this.startSPeak()
-        }
+    componentWillMount() {
+        this.openCard()
     }
+
+    openCard() {
+        let com = 'открыть книгу'
+        if(this.props.command !== undefined) {
+            let prop = this.props.command.slice(15)
+            if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
+                this.setState({ open: !this.state.open });
+                this.startSPeak()
+            }
+        }
+    };
+
+
+    delete = () => {
+        let id = this.props.data._id
+        axios.delete("http://localhost:8000/books/" + id)
+    };
+
+
     render() {
         const {data} = this.props;
-        console.log(data, 'kek')
         return(
-            <div onClick={this.handleClickOpen} className='card' id={data.id}>
-                {data.title}
+            <div>
+                <button className='delete-btn' onClick={this.delete}>X</button>
+
+                <div onClick={this.handleClickOpen} className='card' id={data.id}>
+                    {data.title}
+                </div>
                 <Dialog
                     open={this.state.open}
                     transition={Transition}

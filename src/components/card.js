@@ -7,6 +7,7 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
+import axios from "axios/index";
 
 function Transition(props) {
     return <Slide direction="up" {...props} />;
@@ -20,7 +21,7 @@ class Card extends React.Component {
             open: false,
             desc: props.desc,
             title: props.data.title,
-            speechSyn: new SpeechSynthesisUtterance,
+            speechSyn: new SpeechSynthesisUtterance(),
     }
         }
     handleClickOpen = () => {
@@ -52,12 +53,23 @@ class Card extends React.Component {
             this.startSPeak()
         }
     }
+
+    delete = () => {
+        let id = this.props.data._id
+        axios.delete("http://localhost:8000/cards/" + id)
+    };
+
     render() {
         const {data} = this.props;
 
         return(
-            <div onClick={this.handleClickOpen} className='card' id={data.id}>
-                {data.title}
+            <div>
+                <button className='delete-btn' onClick={this.delete}>X</button>
+
+                <div onClick={this.handleClickOpen} className='card' id={data.id}>
+                    {data.title}
+                </div>
+
                 <Dialog
                     open={this.state.open}
                     transition={Transition}

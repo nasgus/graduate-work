@@ -1,5 +1,6 @@
 import React from 'react'
 import Card from "./card";
+import axios from "axios"
 
 let b = 0;
 
@@ -12,6 +13,8 @@ class CardList extends React.Component {
             title: '',
             desc: '',
             command: props.command,
+            speechSyn: new SpeechSynthesisUtterance(),
+
         };
         this.toggleAddCard = this.toggleAddCard.bind(this);
         this.addToList = this.addToList.bind(this);
@@ -30,23 +33,17 @@ class CardList extends React.Component {
     }
 
     addToList() {
+        let data = 'title=' + this.state.title + '&desc=' + this.state.desc
         if (this.state.title !== '' && this.state.desc !== '') {
-            let card = {
-                id: this.state.cardsArray.length,
-                title: this.state.title,
-                desc: this.state.desc,
-                command: this.state.command,
-            };
-            let array = this.state.cardsArray;
-            array.push(card)
-            this.setState({
-                cardsArray: array,
-                title: this.state.title,
-                desc: this.state.desc,
-                date: new Date(),
-                isAddBlockOpened: false
-            })
-            console.log(this.state.cardsArray)
+           axios.post("http://localhost:8000/cards", data)
+               .then(function (response) {
+                   console.log(response);
+               })
+               .catch(function (error) {
+                   console.log(error);
+               });
+            this.toggleAddCard()
+            this.update()
         } else {
             alert('error')
         }
@@ -64,13 +61,46 @@ class CardList extends React.Component {
         })
     }
 
+    speechCheck = (com) => {
+        let speech = new SpeechSynthesisUtterance();
+        speech.text = com;
+        speechSynthesis.speak(speech);
+
+    }
+
     componentWillReceiveProps(nextProps, lol) {
         this.setState({
             command: nextProps.command > this.props.command
-
         });
         this.checkArrCommand(nextProps.command)
         this.deleteCard(nextProps.command)
+        this.speechCheck(nextProps.command)
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:8000/cards')
+            .then((res) => {
+                this.setState({
+                    cardsArray: res.data
+                })
+            })
+            .catch((err) => {
+                console.log('bad response', err)
+            })
+    }
+
+    update = () => {
+        axios.get('http://localhost:8000/cards')
+            .then((res) => {
+                this.setState({
+                    cardsArray: res.data
+                })
+            })
+            .catch((err) => {
+                console.log('bad response', err)
+            })
+        this.componentDidMount()
+
     }
 
     checkArrCommand(command) {
@@ -90,7 +120,7 @@ class CardList extends React.Component {
             'сберечь заметку',
         ];
         const cancelCommand = [
-            'омтенить создание заметки',
+            'отменить создание заметки',
             'запретить создание заметку',
             'забыть создание заметку',
             'не сохронять заметку',
@@ -119,6 +149,8 @@ class CardList extends React.Component {
             }
         });
         cancelCommand.forEach((item) => {
+
+
             if (command.indexOf(item) === 0) {
                 this.toggleAddCard()
             }
@@ -140,28 +172,23 @@ class CardList extends React.Component {
     }
 
     deleteCard(kek) {
-        console.log('open')
-        let arr = [];
         let com = 'удалить заметку';
             this.state.cardsArray.map((card) => {
                 if(kek.indexOf(com) === 0 && kek.slice(16) === card.title) {
-                    console.log(card.title, card.id)
-                } else {
-                    arr.push(card)
+                    console.log(card.title, card._id)
+                    let id = card._id
+                    axios.delete("http://localhost:8000/cards/" + id)
+                    this.update()
+
                 }
             })
-            this.setState({
-                cardsArray: arr
-            })
-
-
     }
+
 
     render() {
         return (
-            <div className="list">
+            <div className="list" onClick={this.update}>
                 <p className='title'>To Do</p>
-                <button className="edit grey">X</button>
                 {
                     this.state.cardsArray.map((card) => {
                         return <Card data={card} key={b++} command={this.props.command} />
@@ -176,7 +203,6 @@ class CardList extends React.Component {
                     </div> :
                     <p className="add-card grey" onClick={this.toggleAddCard}> Добавить карточку... </p>
                 }
-
 
             </div>
         )

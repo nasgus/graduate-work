@@ -98,5 +98,12 @@ textarea {
 
 }
 
+.delete-btn {
+  float: right;
+  border: none;
+  height: 20px;
+  width: 20px;
+}
+
 
 
