@@ -34,6 +34,7 @@ class CardList extends React.Component {
 
     addToList() {
         let data = 'title=' + this.state.title + '&desc=' + this.state.desc
+        console.log(this.state.title !== '', this.state.desc !== '', this.state.isAddBlockOpened)
         if (this.state.title !== '' && this.state.desc !== '') {
            axios.post("http://localhost:8000/cards", data)
                .then(function (response) {
@@ -44,8 +45,6 @@ class CardList extends React.Component {
                });
             this.toggleAddCard()
             this.update()
-        } else {
-            alert('error')
         }
     }
 
@@ -65,6 +64,11 @@ class CardList extends React.Component {
         let speech = new SpeechSynthesisUtterance();
         speech.text = com;
         speechSynthesis.speak(speech);
+        if (this.state.isAddBlockOpened && com !== 'отменить создание заметки') {
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'Пожалуйста, заполните все поля';
+            speechSynthesis.speak(speech);
+        }
 
     }
 
@@ -75,6 +79,7 @@ class CardList extends React.Component {
         this.checkArrCommand(nextProps.command)
         this.deleteCard(nextProps.command)
         this.speechCheck(nextProps.command)
+        console.log(nextProps.command)
     }
 
     componentDidMount() {
@@ -191,7 +196,7 @@ class CardList extends React.Component {
                 <p className='title'>To Do</p>
                 {
                     this.state.cardsArray.map((card) => {
-                        return <Card data={card} key={b++} command={this.props.command} />
+                        return <Card data={card} command={this.props.command} />
                     })
                 }
                 {this.state.isAddBlockOpened ?

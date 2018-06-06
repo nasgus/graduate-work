@@ -16,10 +16,11 @@ function Transition(props) {
 
 
 class Books extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
-            open: false
+            open: false,
+            title: props.data.title.toLowerCase()
         }
     }
     handleClickOpen = () => {
@@ -31,8 +32,9 @@ class Books extends React.Component {
         this.startSPeak()
     };
     startSPeak = () => {
+        console.log(this.state.title)
         let speech = new SpeechSynthesisUtterance();
-        speech.text = this.props.data.title + '.' + this.props.data.desc;
+        speech.text = this.props.data.title + '. ' + this.props.data.desc;
         if(this.state.open === false) {
             speechSynthesis.speak(speech);
 
@@ -45,12 +47,30 @@ class Books extends React.Component {
         this.openCard()
     }
 
-    openCard() {
-        let com = 'открыть книгу'
-        if(this.props.command !== undefined) {
-            let prop = this.props.command.slice(15)
-            if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
+    componentWillReceiveProps(nextProps, lol) {
+        this.setState({
+            command: nextProps.command
+        });
+
+        this.openCard(nextProps.command)
+    }
+
+    openCard(command) {
+        let open = 'открыть книгу'
+        let close = 'закрыть книгу'
+        let prop
+
+        if(command !== undefined) {
+            prop = command.slice(14);
+
+            if(command.indexOf(open) === 0 && prop === this.state.title) {
                 this.setState({ open: !this.state.open });
+                this.startSPeak()
+            }
+            if(command === close) {
+                this.setState({
+                    open: false
+                })
                 this.startSPeak()
             }
         }
@@ -66,10 +86,10 @@ class Books extends React.Component {
     render() {
         const {data} = this.props;
         return(
-            <div>
+            <div className='card'>
                 <button className='delete-btn' onClick={this.delete}>X</button>
 
-                <div onClick={this.handleClickOpen} className='card' id={data.id}>
+                <div onClick={this.handleClickOpen} id={data.id}>
                     {data.title}
                 </div>
                 <Dialog

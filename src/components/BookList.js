@@ -6,10 +6,11 @@ let c = 10
 
 
 class BookList extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
-            booksArray: []
+            booksArray: [],
+            command: props.command
         }
     }
 
@@ -46,11 +47,11 @@ class BookList extends React.Component {
 
     render() {
         return (
-            <div className="list" onClick={this.update}>
+            <div className="book" onClick={this.update}>
                 <p className='title'>Books</p>
                 {
                     this.state.booksArray.map((card) => {
-                        return <Books data={card} key={c++} command={this.props.command}/>
+                        return <Books data={card} command={this.props.command}/>
                     })
                 }
             </div>

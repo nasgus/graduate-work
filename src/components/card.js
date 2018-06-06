@@ -22,6 +22,7 @@ class Card extends React.Component {
             desc: props.desc,
             title: props.data.title,
             speechSyn: new SpeechSynthesisUtterance(),
+            command: null
     }
         }
     handleClickOpen = () => {
@@ -44,13 +45,35 @@ class Card extends React.Component {
     };
     componentWillMount() {
         this.openCard()
+        console.log('open1', this.state.title)
+
     }
-    openCard() {
-        let com = 'открыть заметку'
-        let prop = this.props.command.slice(16)
-        if(this.props.command.indexOf(com) === 0 && prop === this.state.title) {
-            this.setState({ open: !this.state.open });
-            this.startSPeak()
+
+    componentWillReceiveProps(nextProps, lol) {
+        this.setState({
+            command: nextProps.command
+        });
+
+        this.openCard(nextProps.command)
+    }
+
+    openCard(command) {
+        let open = 'открыть заметку'
+        let cancel = 'закрыть заметку'
+
+        let prop
+
+        if(command !== undefined) {
+            prop = command.slice(16);
+            if(command.indexOf(open) === 0 && prop === this.state.title) {
+                this.setState({ open: !this.state.open });
+                this.startSPeak()
+            }
+            if(command === cancel) {
+                this.setState({
+                    open: false
+                })
+            }
         }
     }
 
@@ -63,10 +86,10 @@ class Card extends React.Component {
         const {data} = this.props;
 
         return(
-            <div>
+            <div className='card'>
                 <button className='delete-btn' onClick={this.delete}>X</button>
 
-                <div onClick={this.handleClickOpen} className='card' id={data.id}>
+                <div onClick={this.handleClickOpen} id={data.id}>
                     {data.title}
                 </div>
 

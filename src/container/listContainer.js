@@ -54,8 +54,7 @@ class ListContainer extends React.Component {
     render() {
         return (
             <div>
-                <div className='check-word'>{this.state.result}</div>
-                <BookList/>
+                <BookList command={this.state.result}/>
                 <CardList command={this.state.result}/>
             </div>
         )
