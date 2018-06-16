@@ -57,10 +57,10 @@ class Card extends React.Component {
         this.openCard(nextProps.command)
     }
 
+
     openCard(command) {
         let open = 'открыть заметку'
         let cancel = 'закрыть заметку'
-
         let prop
 
         if(command !== undefined) {
@@ -73,6 +73,8 @@ class Card extends React.Component {
                 this.setState({
                     open: false
                 })
+                this.startSPeak()
+
             }
         }
     }

@@ -2,8 +2,6 @@ import React from 'react'
 import Card from "./card";
 import axios from "axios"
 
-let b = 0;
-
 class CardList extends React.Component {
     constructor(props) {
         super();
@@ -33,18 +31,76 @@ class CardList extends React.Component {
     }
 
     addToList() {
-        let data = 'title=' + this.state.title + '&desc=' + this.state.desc
-        console.log(this.state.title !== '', this.state.desc !== '', this.state.isAddBlockOpened)
         if (this.state.title !== '' && this.state.desc !== '') {
-           axios.post("http://localhost:8000/cards", data)
-               .then(function (response) {
-                   console.log(response);
-               })
-               .catch(function (error) {
-                   console.log(error);
-               });
-            this.toggleAddCard()
+            this.checkTitles(this.state.title)
+        } else {
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'Пожалуйста, заполните все поля';
+            speechSynthesis.speak(speech);
+        }
+    }
+
+    checkTitles = (name) => {
+        console.log(1)
+        let num = 0
+        if(this.state.cardsArray.length !== 0) {
+            console.log(2)
+            this.state.cardsArray.forEach((item) => {
+                if(item.title === name) {
+                    console.log(3)
+
+                    num -= 1
+                } else {
+                    console.log(3)
+
+                    num += 1
+                }
+            })
+            this.checkName(num)
+
+        } else {
+            let data = 'title=' + this.state.title + '&desc=' + this.state.desc
+            axios.post("http://localhost:8000/cards", data)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            this.toggleAddCard();
             this.update()
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'заметка успешно сохранена';
+            speechSynthesis.speak(speech);
+        }
+
+    }
+
+    checkName = (num) => {
+        console.log(4)
+
+        if(num !== this.state.cardsArray.length) {
+            console.log(5)
+
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'Такое название уже существует, придумайте пожалуйста другое название';
+            speechSynthesis.speak(speech);
+        } else {
+            console.log(5)
+
+            let data = 'title=' + this.state.title + '&desc=' + this.state.desc
+            axios.post("http://localhost:8000/cards", data)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            this.toggleAddCard();
+            this.update()
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'заметка успешно сохранена';
+            speechSynthesis.speak(speech);
         }
     }
 
@@ -63,23 +119,23 @@ class CardList extends React.Component {
     speechCheck = (com) => {
         let speech = new SpeechSynthesisUtterance();
         speech.text = com;
-        speechSynthesis.speak(speech);
-        if (this.state.isAddBlockOpened && com !== 'отменить создание заметки') {
-            let speech = new SpeechSynthesisUtterance();
-            speech.text = 'Пожалуйста, заполните все поля';
+        let del = com.indexOf("удалить заметку") === 0
+        console.log(com !== 'сохранить заметку' || com !== 'назвать все книги' || com !== 'назвать все заметки')
+        if(com === 'сохранить заметку' || com === 'назвать все книги' || com === 'назвать все заметки' || del) {
+        } else {
             speechSynthesis.speak(speech);
-        }
 
+        }
     }
 
-    componentWillReceiveProps(nextProps, lol) {
+    componentWillReceiveProps(nextProps, prevProp) {
         this.setState({
             command: nextProps.command > this.props.command
         });
         this.checkArrCommand(nextProps.command)
         this.deleteCard(nextProps.command)
         this.speechCheck(nextProps.command)
-        console.log(nextProps.command)
+        this.sayAllCards(nextProps.command)
     }
 
     componentDidMount() {
@@ -106,6 +162,21 @@ class CardList extends React.Component {
             })
         this.componentDidMount()
 
+    }
+
+    sayAllCards = (com) => {
+        if(com === "назвать все заметки") {
+            let cardsArr = this.state.cardsArray
+            let text = null
+            let i = 0;
+            cardsArr.forEach((item) =>  {
+                i += 1;
+                text = 'заметка номер ' + i + ' - ' + item.title
+                let speech = new SpeechSynthesisUtterance();
+                speech.text = text;
+                speechSynthesis.speak(speech);
+            })
+        }
     }
 
     checkArrCommand(command) {
@@ -174,15 +245,23 @@ class CardList extends React.Component {
                 })
             }
         });
+        if(command === 'помощь') {
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = 'Для создания новой заметки, скажите "Создать новую заметку". Для того что бы задать название заметки, скажите "Название заметки" и сразу без паузы назвать название заметки. Для того что бы задать описание заметки, скажите "Описание заметки" и сразу без паузы назвать описание заметки. Для того что бы сохранить заметку, нужно сказать "Сохранить заметку". Для отмены создания заметки, скажите "Отменить создание заметки". Что бы открыть заметку, скажите "Открыть заметку" и сразу без паузы скажите название нужной вам заметки. Для открытия книги скажите "Открыть книгу" и затем сразу без паузы сказать название книги. Для получения названий всех заметок или книг, скажите "Назвать все заметки, или, книги"';
+            speechSynthesis.speak(speech);
+        }
     }
 
-    deleteCard(kek) {
-        let com = 'удалить заметку';
+    deleteCard(command) {
+        let delCom = 'удалить заметку';
             this.state.cardsArray.map((card) => {
-                if(kek.indexOf(com) === 0 && kek.slice(16) === card.title) {
+                if(command.indexOf(delCom) === 0 && command.slice(16) === card.title) {
                     console.log(card.title, card._id)
                     let id = card._id
                     axios.delete("http://localhost:8000/cards/" + id)
+                    let speech = new SpeechSynthesisUtterance();
+                    speech.text = 'заметка успешно удалена';
+                    speechSynthesis.speak(speech);
                     this.update()
 
                 }
@@ -193,7 +272,7 @@ class CardList extends React.Component {
     render() {
         return (
             <div className="list" onClick={this.update}>
-                <p className='title'>To Do</p>
+                <p className='title'>Cards</p>
                 {
                     this.state.cardsArray.map((card) => {
                         return <Card data={card} command={this.props.command} />
